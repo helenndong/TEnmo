@@ -1,7 +1,5 @@
 package com.techelevator.tenmo.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -10,9 +8,7 @@ public class User {
 
    private int id;
    private String username;
-   @JsonIgnore // prevent from being sent to client
    private String password;
-   @JsonIgnore
    private boolean activated;
    private Set<Authority> authorities = new HashSet<>();
 
@@ -22,7 +18,6 @@ public class User {
       this.id = id;
       this.username = username;
       this.password = password;
-      if(authorities != null) this.setAuthorities(authorities);
       this.activated = true;
    }
 

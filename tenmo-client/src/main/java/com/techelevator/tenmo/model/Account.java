@@ -1,14 +1,11 @@
 package com.techelevator.tenmo.model;
 
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public class Account {
 
     private int id;
-    @NotNull
     private int userId;
-    @NotNull
     private BigDecimal balance;
 
     public int getId() {
@@ -33,5 +30,14 @@ public class Account {
 
     public void setBalance(BigDecimal balance) {
         this.balance = balance;
+    }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", balance=" + balance +
+                '}';
     }
 }

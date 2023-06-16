@@ -20,7 +20,6 @@
         <java.version>11</java.version>
         <jjwt.version>0.11.1</jjwt.version>
     </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
