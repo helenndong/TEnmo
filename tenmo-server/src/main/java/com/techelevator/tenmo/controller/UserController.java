@@ -33,11 +33,5 @@ public class UserController {
         return userDao.getUserById(userId);
     }
 
-//    @GetMapping("/users/{userId}/username")
-//    public String getUsernameById(@PathVariable int userId) {
-//        // Retrieve the username for the given userId from your data source (e.g., database)
-//        // Return the username
-//
-//    }
 
 }

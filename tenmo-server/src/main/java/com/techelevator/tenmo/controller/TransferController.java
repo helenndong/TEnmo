@@ -22,11 +22,6 @@ public class TransferController {
     @Autowired
     private TransferDao transferDao;
 
-    @RequestMapping(path = "/transfers",method = RequestMethod.GET)
-    public List<Transfer> getAllTransfers(){
-        return transferDao.getAllTransfers();
-    }
-
     @RequestMapping(path = "transfer/account/{id}", method = RequestMethod.GET)
     public List<Transfer> getAllTransferByAccountId(@NotNull @PathVariable int id){
         return transferDao.getAllTransferByAccountId(id);
@@ -47,5 +42,10 @@ public class TransferController {
     @RequestMapping(path = "transfer/pending/{id}", method = RequestMethod.GET)
     public List<Transfer> getPendingTransfers(@NotNull @PathVariable int id) {
         return transferDao.getPendingTransfers(id);
+    }
+
+    @RequestMapping(path = "/transfers/pending",method = RequestMethod.GET)
+    public List<Transfer> getAllPendingTransfers(){
+        return transferDao.getAllPendingTransfers();
     }
 }

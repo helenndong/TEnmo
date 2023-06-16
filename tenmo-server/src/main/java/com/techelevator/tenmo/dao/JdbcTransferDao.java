@@ -20,18 +20,6 @@ public class JdbcTransferDao implements TransferDao{
     private JdbcTemplate jdbcTemplate;
 
     @Override
-    public List<Transfer> getAllTransfers() {
-        List<Transfer> transferList = new ArrayList<>();
-        String sql = "SELECT * FROM transfer;";
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
-        while (results.next()) {
-            Transfer transfer = mapRowToTransfer(results);
-            transferList.add(transfer);
-        }
-        return transferList;
-    }
-
-    @Override
     public List<Transfer> getAllTransferByAccountId(int id) {
         List<Transfer> transferList = new ArrayList<>();
         String sql = "Select * From transfer Where account_from = ?";
@@ -73,6 +61,18 @@ public class JdbcTransferDao implements TransferDao{
     public void deleteTransfer(int id) {
         String sql = "Delete From transfer Where transfer_id = ?;";
         jdbcTemplate.update(sql,id);
+    }
+
+    @Override
+    public List<Transfer> getAllPendingTransfers() {
+        List<Transfer> pendingTransferList = new ArrayList<>();
+        String sql = "SELECT * FROM transfer WHERE transfer_status_id = 1;";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
+        while (results.next()) {
+            Transfer transfer = mapRowToTransfer(results);
+            pendingTransferList.add(transfer);
+        }
+        return pendingTransferList;
     }
 
     @Override

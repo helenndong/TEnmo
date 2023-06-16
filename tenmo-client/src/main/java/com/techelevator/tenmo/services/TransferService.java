@@ -7,9 +7,6 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class TransferService {
 
     private String baseURL;
@@ -22,11 +19,11 @@ public class TransferService {
 
     public void setAuthToken(String authToken) {this.authToken = authToken;}
 
-    public Transfer[] getAllTransfers() {
+    public Transfer[] getAllTransfersByAccountId(int id) {
         Transfer[] allTransfers = null;
         try {
             ResponseEntity<Transfer[]> response =
-                    restTemplate.exchange(baseURL + "/transfers", HttpMethod.GET, makeAuthEntity(), Transfer[].class);
+                    restTemplate.exchange(baseURL + "transfer/account/" + id , HttpMethod.GET, makeAuthEntity(), Transfer[].class);
             allTransfers = response.getBody();
         } catch (RestClientResponseException | ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
@@ -60,12 +57,38 @@ public class TransferService {
         Transfer[] pendingTransfers = null;
         try {
             ResponseEntity<Transfer[]> response =
-                    restTemplate.exchange(baseURL + "/transfer" + "/pending/" + id, HttpMethod.GET, makeAuthEntity(), Transfer[].class);
+                    restTemplate.exchange(baseURL + "/transfer/pending/" + id, HttpMethod.GET, makeAuthEntity(), Transfer[].class);
             pendingTransfers = response.getBody();
         } catch (RestClientResponseException | ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
         } return pendingTransfers;
     }
+
+    public Transfer[] getAllPendingTransfers() {
+        Transfer[] allPendingTransfers = null;
+        try {
+            ResponseEntity<Transfer[]> response =
+                    restTemplate.exchange(baseURL + "/transfers/pending", HttpMethod.GET, makeAuthEntity(), Transfer[].class);
+            allPendingTransfers = response.getBody();
+        } catch (RestClientResponseException | ResourceAccessException e) {
+            BasicLogger.log(e.getMessage());
+        } return allPendingTransfers;
+    }
+
+    public void rejectTransfer(int transferId) {
+        try {
+            restTemplate.delete(baseURL + "/transfer/" + transferId);
+            System.out.println("Transfer rejected successfully.");
+            // Add any additional actions or logging here
+        } catch (RestClientResponseException e) {
+            System.out.println("Failed to reject the transfer. Error: " + e.getRawStatusCode());
+            // Handle specific error scenarios or logging here
+        } catch (ResourceAccessException e) {
+            System.out.println("Failed to establish a connection to the server. Error: " + e.getMessage());
+            // Handle connection-related errors or logging here
+        }
+    }
+
 
 
     private HttpEntity<Transfer> makeTransferEntity(Transfer transfer) {

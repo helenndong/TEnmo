@@ -55,7 +55,7 @@ public class AccountService {
             ResponseEntity<Void> response = restTemplate.exchange(
                     API_BASE_URL + "send/" + senderId + "/" + receiverId + "/" + amount ,
                     HttpMethod.POST, makeAuthEntity(), Void.class);
-            System.out.println("**Transfer Successful.**");
+            System.out.println("Transfer Successful!");
         }
         catch (RestClientResponseException | ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
@@ -67,6 +67,7 @@ public class AccountService {
             ResponseEntity<Void> response = restTemplate.exchange(
                     API_BASE_URL + "receive/" + receiverId + "/" + senderId + "/" + amount ,
                     HttpMethod.POST, makeAuthEntity(), Void.class);
+            System.out.println("Request Successful!");
         }
         catch (RestClientResponseException | ResourceAccessException e) {
             BasicLogger.log(e.getMessage());

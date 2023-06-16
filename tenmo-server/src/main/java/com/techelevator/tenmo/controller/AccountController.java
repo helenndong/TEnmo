@@ -78,7 +78,6 @@ public class AccountController {
     @Transactional
     @RequestMapping(path = "/receive/{receiver}/{sender}/{amount}", method = RequestMethod.POST)
     public void receiveTeBucks (@PathVariable int receiver, @PathVariable int sender, @PathVariable BigDecimal amount) {
-        accountDao.receiveTeBucks(receiver,sender,amount);
         Transfer newTransfer = new Transfer();
         newTransfer.setAccountFrom(receiver);
         newTransfer.setAccountTo(sender);
@@ -87,6 +86,7 @@ public class AccountController {
         newTransfer.setTransferStatusId(1);
         transferDao.createTransfer(newTransfer);
     }
+
 
 
 
