@@ -24,20 +24,6 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
-    public int findIdByUsername(String username) {
-        if (username == null) throw new IllegalArgumentException("Username cannot be null");
-
-        int userId;
-        try {
-            userId = jdbcTemplate.queryForObject("SELECT user_id FROM tenmo_user WHERE username = ?", int.class, username);
-        } catch (NullPointerException | EmptyResultDataAccessException e) {
-            throw new UsernameNotFoundException("User " + username + " was not found.");
-        }
-
-        return userId;
-    }
-
-    @Override
     public User getUserById(int userId) {
         String sql = "SELECT user_id, username, password_hash FROM tenmo_user WHERE user_id = ?";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
@@ -61,6 +47,20 @@ public class JdbcUserDao implements UserDao {
 
         return users;
     }
+    @Override
+    public int findIdByUsername(String username) {
+        if (username == null) throw new IllegalArgumentException("Username cannot be null");
+
+        int userId;
+        try {
+            userId = jdbcTemplate.queryForObject("SELECT user_id FROM tenmo_user WHERE username = ?", int.class, username);
+        } catch (NullPointerException | EmptyResultDataAccessException e) {
+            throw new UsernameNotFoundException("User " + username + " was not found.");
+        }
+
+        return userId;
+    }
+
 
     @Override
     public User findByUsername(String username) {

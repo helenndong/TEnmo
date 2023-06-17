@@ -14,7 +14,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-//@PreAuthorize("isAuthenticated()")
+@PreAuthorize("isAuthenticated()")
 @RestController
 public class TransferController {
 
@@ -41,22 +41,10 @@ public class TransferController {
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PutMapping("transfer/approve/{id}")
-    public void updateTransferStatusToApproved(@NotNull @PathVariable int id){
-        transferDao.updateTransferStatusToApproved(id);
+    @PutMapping("transfer/{transferStatusId}/{id}")
+    public void updateTransferStatusToApproved(@NotNull @PathVariable int id, @PathVariable int transferStatusId){
+        transferDao.updateTransferStatus(id, transferStatusId);
     }
-
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PutMapping("transfer/reject/{id}")
-    public void updateTransferStatusToRejected(@NotNull @PathVariable int id){
-        transferDao.updateTransferStatusToRejected(id);
-    }
-
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
-//    @PutMapping("transfer/{id}")
-//    public void updateTransferStatus(@NotNull @PathVariable int transfer_status_id, @PathVariable int id){
-//        transferDao.updateTransferStatus(transfer_status_id, id);
-//    }
 
 
     @RequestMapping(path = "transfer/pending/{id}", method = RequestMethod.GET)

@@ -126,11 +126,6 @@ public class App {
             String formattedAmount = String.format("$%.2f", transfer.getAmount());
             System.out.printf("%-10d %-15s %s%n", transfer.getId(), fromTo, formattedAmount);
 
-
-//            String fromTo = transfer.getTransferTypeId() == 1 ? "From: " + accountService.getUsernameByAccountId(transfer.getAccountFrom()) :
-//                    "To: " + accountService.getUsernameByAccountId(transfer.getAccountTo());
-//            String formattedAmount = String.format("$%.2f", transfer.getAmount());
-//            System.out.printf("%-10d %-15s %s%n", transfer.getId(), fromTo, formattedAmount);
         }
 
 
@@ -193,6 +188,7 @@ public class App {
         int userInput = consoleService.promptForInt("Please choose an option: ");
 
         BigDecimal amount = transfer.getAmount();
+        int transferStatusId;
 
         if (userInput == 0) {
             return;
@@ -200,14 +196,21 @@ public class App {
             if (accountService.getAccountByUserId(currentUser.getUser().getId()).getBalance().compareTo(amount) < 0) {
                 System.out.println("Insufficient funds");
             } else {
-                accountService.sendTeBucks(
+                accountService.sendRequestedTeBucks(
                         accountService.getAccountByUserId(currentUser.getUser().getId()).getId(),
                         transfer.getAccountTo(), amount);
-                transferService.updateTransferStatusToApproved(transferId);
+                transferStatusId = APPROVED_TRANSFER_STATUS;
+                transferService.updateTransferStatus(transferId, transferStatusId);
+                if (transferService != null) {
+                    System.out.println("Transfer Status: Approved.");
+                }
             }
         } else {
-            transferService.updateTransferStatusToRejected(transferId);
-//            transferService.updateTransferStatus(transferId);
+            transferStatusId = REJECTED_TRANSFER_STATUS;
+            transferService.updateTransferStatus(transferId, transferStatusId);
+            if (transferService != null) {
+                System.out.println("Transfer Status: Rejected.");
+            }
         }
 
     }
@@ -251,11 +254,17 @@ public class App {
                     accountService.getAccountByUserId(currentUser.getUser().getId()).getId(),
                     accountService.getAccountByUserId(receiverId).getId(),
                     amount);
+            if (accountService != null) {
+                System.out.println("Transfer Status: Approved.");
+            }
         } else {
             accountService.receiveTeBucks(
                     accountService.getAccountByUserId(receiverId).getId(),
                     accountService.getAccountByUserId(currentUser.getUser().getId()).getId(),
                     amount);
+            if (accountService != null) {
+                System.out.println("Transfer Status: Pending.");
+            }
         }
     }
 

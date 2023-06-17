@@ -26,7 +26,9 @@ public interface AccountDao {
 
     Integer getUserIdByAccountId(int id);
 
-    void sendTeBucks (int sender, int receiver, BigDecimal amount);
+    void sendTeBucks(int sender, int receiver, BigDecimal amount);
+
+    void sendRequestedTeBucks(int sender, int receiver, BigDecimal amount);
 
 //    void receiveTeBucks (int receiver, int sender, BigDecimal amount);
 

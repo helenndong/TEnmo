@@ -74,57 +74,16 @@ public class TransferService {
             BasicLogger.log(e.getMessage());
         } return allPendingTransfers;
     }
-    public void updateTransferStatusToApproved(int transferId) {
-
-        Transfer updateTransferStatus = new Transfer();
+    public void updateTransferStatus(int transferId, int transferStatusId) {
 
         try {
-            restTemplate.put(baseURL + "/transfer/approve/" + transferId, updateTransferStatus);
+            restTemplate.put(baseURL + "/transfer/" + transferStatusId + "/" + transferId, makeAuthEntity());
         } catch (RestClientResponseException e) {
             System.out.println("Failed to update transfer status. Error: " + e.getRawStatusCode());
         } catch (ResourceAccessException e) {
             System.out.println("Failed to establish a connection to the server. Error: " + e.getMessage());
         }
     }
-
-    public void updateTransferStatusToRejected(int transferId) {
-
-        Transfer updateTransferStatus = new Transfer();
-
-        try {
-            restTemplate.put(baseURL + "/transfer/reject/" + transferId, updateTransferStatus);
-            System.out.println("Transfer Rejected.");
-        } catch (RestClientResponseException e) {
-            System.out.println("Failed to update transfer status. Error: " + e.getRawStatusCode());
-        } catch (ResourceAccessException e) {
-            System.out.println("Failed to establish a connection to the server. Error: " + e.getMessage());
-        }
-    }
-
-//public void updateTransferStatus(int transferStatusId, int transferId) {
-//    Transfer updateTransferStatus = new Transfer();
-//    updateTransferStatus.setTransferStatusId(transferStatusId);
-//    try {
-//        restTemplate.put(baseURL + "/transfer/{transferStatusId}/{transferId}", updateTransferStatus, transferStatusId, transferId);
-//    } catch (RestClientResponseException e) {
-//        System.out.println("Failed to update transfer status. Error: " + e.getRawStatusCode());
-//    } catch (ResourceAccessException e) {
-//        System.out.println("Failed to establish a connection to the server. Error: " + e.getMessage());
-//    }
-//}
-
-    public void rejectTransfer(int transferId) {
-        try {
-            restTemplate.delete(baseURL + "/transfer/" + transferId);
-            System.out.println("Transfer rejected successfully.");
-        } catch (RestClientResponseException e) {
-            System.out.println("Failed to reject the transfer. Error: " + e.getRawStatusCode());
-        } catch (ResourceAccessException e) {
-            System.out.println("Failed to establish a connection to the server. Error: " + e.getMessage());
-        }
-    }
-
-
 
     private HttpEntity<Transfer> makeTransferEntity(Transfer transfer) {
         HttpHeaders headers = new HttpHeaders();

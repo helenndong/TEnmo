@@ -70,15 +70,19 @@ public class AccountController {
     @Transactional
     @RequestMapping(path = "/send/{sender}/{receiver}/{amount}", method = RequestMethod.POST)
     public void sendTeBucks (@PathVariable int sender, @PathVariable int receiver, @PathVariable BigDecimal amount) {
-        accountDao.sendTeBucks(sender,receiver,amount);
-
-        Transfer newTransfer = new Transfer();
-        newTransfer.setAccountFrom(sender);
-        newTransfer.setAccountTo(receiver);
-        newTransfer.setAmount(amount);
-        newTransfer.setTransferTypeId(2);
-        newTransfer.setTransferStatusId(2);
-        transferDao.createTransfer(newTransfer);
+        accountDao.sendTeBucks(sender, receiver, amount);
+            Transfer newTransfer = new Transfer();
+            newTransfer.setAccountFrom(sender);
+            newTransfer.setAccountTo(receiver);
+            newTransfer.setAmount(amount);
+            newTransfer.setTransferTypeId(2);
+            newTransfer.setTransferStatusId(2);
+            transferDao.createTransfer(newTransfer);
+    }
+    @Transactional
+    @RequestMapping(path = "/send-requested/{sender}/{receiver}/{amount}", method = RequestMethod.POST)
+    public void sendRequestedTeBucks(@PathVariable int sender, @PathVariable int receiver, @PathVariable BigDecimal amount) {
+        accountDao.sendTeBucks(sender, receiver, amount);
     }
 
     @Transactional

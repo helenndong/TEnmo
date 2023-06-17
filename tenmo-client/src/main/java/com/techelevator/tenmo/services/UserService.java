@@ -40,20 +40,10 @@ public class UserService {
                     restTemplate.exchange(url, HttpMethod.GET, makeAuthEntity(), User.class);
             user = response.getBody();
 
-            if (user != null) {
-                String username = findUsernameById(userId);
-                user.setUsername(username);
-            }
         } catch (RestClientResponseException | ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
         }
         return user;
-    }
-
-    private String findUsernameById(int userId) {
-        String url = baseUrl + "users/" + userId + "/username";
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, makeAuthEntity(), String.class);
-        return response.getBody();
     }
 
     private HttpEntity<Void> makeAuthEntity() {

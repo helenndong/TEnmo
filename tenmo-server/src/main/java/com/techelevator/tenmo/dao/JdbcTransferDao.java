@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,25 +53,18 @@ public class JdbcTransferDao implements TransferDao{
         return getTransferById(newId);
     }
 
+    @Override
+    public void updateTransferStatus(int id, int transferStatusId) {
+        String sql = "UPDATE transfer SET transfer_status_id = ? WHERE transfer_id = ?;";
+        jdbcTemplate.update(sql, transferStatusId, id);
+    }
+
 //    @Override
-//    public void updateTransferStatus(int transferStatusId, int id) {
-//        String sql = "UPDATE transfer SET transfer_status_id = ? WHERE transfer_id = ?;";
-//        jdbcTemplate.update(sql, transferStatusId, id);
+//    public boolean checkTransferExists(int transferId) {
+//        String sql = "SELECT * FROM transfers where transfer_id = ?";
+//        int count = jdbcTemplate.queryForObject(sql, Integer.class, transferId);
+//        return count > 0;
 //    }
-
-    @Override
-    public void updateTransferStatusToApproved(int id) {
-        //transfer_status_id = 2 is Approved
-        String sql = "UPDATE transfer SET transfer_status_id = 2 WHERE transfer_id = ?;";
-        jdbcTemplate.update(sql, id);
-    }
-
-    @Override
-    public void updateTransferStatusToRejected(int id) {
-        //transfer_status_id = 3 is Rejected
-        String sql = "UPDATE transfer SET transfer_status_id = 3 WHERE transfer_id = ?;";
-        jdbcTemplate.update(sql, id);
-    }
 
     @Override
     public void deleteTransfer(int id) {

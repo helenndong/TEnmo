@@ -2,6 +2,7 @@ package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.Transfer;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface TransferDao {
@@ -13,8 +14,9 @@ public interface TransferDao {
 
     Transfer createTransfer(Transfer transfer);
 
-    void updateTransferStatusToApproved(int id);
-    void updateTransferStatusToRejected(int id);
+    void updateTransferStatus(int id, int transferStatusId);
+
+//    boolean checkTransferExists(int transferId);
 
     void deleteTransfer(int id);
 

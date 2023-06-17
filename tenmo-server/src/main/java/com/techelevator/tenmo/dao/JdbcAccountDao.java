@@ -96,6 +96,12 @@ public class JdbcAccountDao implements AccountDao{
         addToAccount(receiver, amount);
     }
 
+    @Override
+    public void sendRequestedTeBucks(int sender, int receiver, BigDecimal amount) {
+        subtractFromAccount(sender, amount);
+        addToAccount(receiver, amount);
+    }
+
 //    @Override
 //    public void receiveTeBucks(int sender, int receiver, BigDecimal amount) {
 //        subtractFromAccount(receiver, amount);
