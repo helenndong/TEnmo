@@ -82,6 +82,13 @@ public class JdbcAccountDao implements AccountDao{
         return jdbcTemplate.queryForObject(sql, String.class, id);
     }
 
+    @Override
+    public Integer getUserIdByAccountId(int id) {
+        String sql = "SELECT user_id FROM account WHERE account_id = ?;";
+        return jdbcTemplate.queryForObject(sql, Integer.class, id);
+    }
+
+
 
     @Override
     public void sendTeBucks(int sender, int receiver, BigDecimal amount) {
@@ -89,11 +96,11 @@ public class JdbcAccountDao implements AccountDao{
         addToAccount(receiver, amount);
     }
 
-    @Override
-    public void receiveTeBucks(int sender, int receiver, BigDecimal amount) {
-        subtractFromAccount(receiver, amount);
-        addToAccount(sender, amount);
-    }
+//    @Override
+//    public void receiveTeBucks(int sender, int receiver, BigDecimal amount) {
+//        subtractFromAccount(receiver, amount);
+//        addToAccount(sender, amount);
+//    }
 
     @Override
     public BigDecimal getBalanceByAccountId(int id) {

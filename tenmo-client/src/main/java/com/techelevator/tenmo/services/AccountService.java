@@ -34,7 +34,6 @@ public class AccountService {
     }
 
     public Account getAccountByUserId(int userId){
-
         Account account = null;
         try{
             ResponseEntity<Account> response = restTemplate.exchange(
@@ -47,18 +46,33 @@ public class AccountService {
             BasicLogger.log(e.getMessage());
         }
         return account;
-
     }
+
+    public Integer getUserIdByAccountId(int id){
+        Integer userId = null;
+        try{
+            ResponseEntity<Integer> response = restTemplate.exchange(
+                    API_BASE_URL + "userId/" + id,
+                    HttpMethod.GET, makeAuthEntity(), Integer.class);
+            userId = response.getBody();
+        }
+        catch (RestClientResponseException | ResourceAccessException e) {
+            BasicLogger.log(e.getMessage());
+        }
+        return userId;
+    }
+
 
     public void sendTeBucks(int senderId, int receiverId, BigDecimal amount){
         try{
             ResponseEntity<Void> response = restTemplate.exchange(
                     API_BASE_URL + "send/" + senderId + "/" + receiverId + "/" + amount ,
                     HttpMethod.POST, makeAuthEntity(), Void.class);
-            System.out.println("Transfer Successful!");
+            System.out.println("Transfer Successful.");
         }
         catch (RestClientResponseException | ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
+            System.out.println("Transfer Failed.");
         }
     }
 
@@ -67,7 +81,7 @@ public class AccountService {
             ResponseEntity<Void> response = restTemplate.exchange(
                     API_BASE_URL + "receive/" + receiverId + "/" + senderId + "/" + amount ,
                     HttpMethod.POST, makeAuthEntity(), Void.class);
-            System.out.println("Request Successful!");
+            System.out.println("Request Successful.");
         }
         catch (RestClientResponseException | ResourceAccessException e) {
             BasicLogger.log(e.getMessage());

@@ -24,9 +24,11 @@ public interface AccountDao {
 
     String getUsernameByAccountId(int id);
 
+    Integer getUserIdByAccountId(int id);
+
     void sendTeBucks (int sender, int receiver, BigDecimal amount);
 
-    void receiveTeBucks (int receiver, int sender, BigDecimal amount);
+//    void receiveTeBucks (int receiver, int sender, BigDecimal amount);
 
 
 }

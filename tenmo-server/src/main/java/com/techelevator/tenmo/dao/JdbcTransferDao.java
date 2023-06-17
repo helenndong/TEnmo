@@ -1,15 +1,11 @@
 package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.Transfer;
-import com.techelevator.tenmo.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.PostMapping;
 
-import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,14 +18,15 @@ public class JdbcTransferDao implements TransferDao{
     @Override
     public List<Transfer> getAllTransferByAccountId(int id) {
         List<Transfer> transferList = new ArrayList<>();
-        String sql = "Select * From transfer Where account_from = ?";
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql,id);
-        while (results.next()){
+        String sql = "SELECT * FROM transfer WHERE account_from = ? OR account_to = ?";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, id, id);
+        while (results.next()) {
             Transfer transfer = mapRowToTransfer(results);
             transferList.add(transfer);
         }
         return transferList;
     }
+
 
     @Override
     public Transfer getTransferById(int id) {
@@ -55,7 +52,17 @@ public class JdbcTransferDao implements TransferDao{
         return getTransferById(newId);
     }
 
+//    @Override
+//    public void updateTransferStatus(int transferStatusId, int id) {
+//        String sql = "UPDATE transfer SET transfer_status_id = ? WHERE transfer_id = ?;";
+//        jdbcTemplate.update(sql, transferStatusId, id);
+//    }
 
+    @Override
+    public void updateTransferStatus(int id) {
+        String sql = "UPDATE transfer SET transfer_status_id = 2 WHERE transfer_id = ?;";
+        jdbcTemplate.update(sql, id);
+    }
 
     @Override
     public void deleteTransfer(int id) {

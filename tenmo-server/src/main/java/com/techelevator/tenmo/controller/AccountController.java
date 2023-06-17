@@ -46,6 +46,7 @@ public class AccountController {
         accountDao.deleteAccount(id);
     }
 
+
     @RequestMapping(path = "/user/{id}/balance", method = RequestMethod.GET)
     public BigDecimal getBalanceByUserId(@NotNull @PathVariable int id) {
         return accountDao.getBalanceByUserId(id);
@@ -59,6 +60,11 @@ public class AccountController {
     @GetMapping("/{id}/username")
     public String getUsernameByAccountId (@PathVariable int id) {
         return accountDao.getUsernameByAccountId(id);
+    }
+
+    @GetMapping("/userId/{id}")
+    public Integer getUserIdByAccountId (@PathVariable int id) {
+        return accountDao.getUserIdByAccountId(id);
     }
 
     @Transactional

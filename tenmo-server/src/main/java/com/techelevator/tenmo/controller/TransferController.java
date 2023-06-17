@@ -6,6 +6,7 @@ import com.techelevator.tenmo.model.Transfer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import javax.swing.table.TableRowSorter;
@@ -38,6 +39,19 @@ public class TransferController {
     public void deleteTransfer(@NotNull @PathVariable int id){
         transferDao.deleteTransfer(id);
     }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("transfer/{id}")
+    public void updateTransferStatus(@NotNull @PathVariable int id){
+        transferDao.updateTransferStatus(id);
+    }
+
+//    @ResponseStatus(HttpStatus.NO_CONTENT)
+//    @PutMapping("transfer/{id}")
+//    public void updateTransferStatus(@NotNull @PathVariable int transfer_status_id, @PathVariable int id){
+//        transferDao.updateTransferStatus(transfer_status_id, id);
+//    }
+
 
     @RequestMapping(path = "transfer/pending/{id}", method = RequestMethod.GET)
     public List<Transfer> getPendingTransfers(@NotNull @PathVariable int id) {

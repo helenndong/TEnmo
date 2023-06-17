@@ -17,6 +17,10 @@ public class App {
     private final AuthenticationService authenticationService = new AuthenticationService(API_BASE_URL);
     private AuthenticatedUser currentUser;
 
+    private final int PENDING_TRANSFER_STATUS = 1;
+    private final int APPROVED_TRANSFER_STATUS = 2;
+    private final int REJECTED_TRANSFER_STATUS = 3;
+
 
     public static void main(String[] args) {
         App app = new App();
@@ -108,57 +112,37 @@ public class App {
         System.out.printf("%-10s %-15s %s%n", "ID", "From/To", "Amount");
         System.out.println("-------------------------------------------");
 
+
         for (Transfer transfer : transfers) {
-            String fromTo = transfer.getTransferTypeId() == 1 ? "From: " + accountService.getUsernameByAccountId(transfer.getAccountFrom()) :
-                    "To: " + accountService.getUsernameByAccountId(transfer.getAccountTo());
+            int accountFromId = transfer.getAccountFrom();
+            String fromTo;
+            if (transfer.getTransferStatusId() == 1) {
+                continue;
+            } else if (currentUserAccount.getId() == accountFromId) {
+                fromTo = "To: " + accountService.getUsernameByAccountId(transfer.getAccountTo());
+            } else {
+                fromTo = "From: " + accountService.getUsernameByAccountId(transfer.getAccountFrom());
+            }
             String formattedAmount = String.format("$%.2f", transfer.getAmount());
             System.out.printf("%-10d %-15s %s%n", transfer.getId(), fromTo, formattedAmount);
 
+
+//            String fromTo = transfer.getTransferTypeId() == 1 ? "From: " + accountService.getUsernameByAccountId(transfer.getAccountFrom()) :
+//                    "To: " + accountService.getUsernameByAccountId(transfer.getAccountTo());
+//            String formattedAmount = String.format("$%.2f", transfer.getAmount());
+//            System.out.printf("%-10d %-15s %s%n", transfer.getId(), fromTo, formattedAmount);
         }
 
-//        for (Transfer transfer : transfers) {
-//            String fromTo;
-//            int accountId;
-//            if (transfer.getTransferTypeId() == 1) {
-//                fromTo = "To: ";
-//                accountId = transfer.getAccountTo();
-//            } else {
-//                fromTo = "From: ";
-//                accountId = transfer.getAccountFrom();
-//            }
-//
-//            String username = accountService.getUsernameByAccountId(accountId);
-//            fromTo += (username.equals(currentUser.getUser().getUsername()) ? "Me" : username);
-//
-//            String formattedAmount = String.format("$%.2f", transfer.getAmount());
-//            System.out.printf("%-10d %-15s %s%n", transfer.getId(), fromTo, formattedAmount);
-//        }
-
-//        for (Transfer transfer : transfers) {
-//            String fromTo;
-//            if (transfer.getTransferTypeId() == 1 || transfer.getTransferTypeId() == 2) {
-//                if (transfer.getAccountFrom() == currentUserAccount.getId()) {
-//                    fromTo = "To: " + accountService.getUsernameByAccountId(transfer.getAccountTo());
-//                } else {
-//                    fromTo = "From: " + accountService.getUsernameByAccountId(transfer.getAccountFrom());
-//                }
-//            } else {
-//                fromTo = "From: " + accountService.getUsernameByAccountId(transfer.getAccountFrom());
-//            }
-//            String formattedAmount = String.format("$%.2f", transfer.getAmount());
-//            System.out.printf("%-10d %-15s %s%n", transfer.getId(), fromTo, formattedAmount);
-//        }
 
         System.out.println("-------------------------------------------");
         System.out.println();
 
+
         int transferId = consoleService.promptForInt("Please enter transfer ID to view details (0 to cancel): ");
+        Transfer transfer = transferService.getTransferById(transferId);
         if (transferId == 0) {
             return;
-        }
-
-        Transfer transfer = transferService.getTransferById(transferId);
-        if (transfer == null) {
+        } else if (transfer == null) {
             System.out.println("Transfer with ID " + transferId + " not found.");
             return;
         }
@@ -196,8 +180,10 @@ public class App {
         Transfer transfer = transferService.getTransferById(transferId);
 
         if (transferId == 0) {
-        } else if (transfer == null) {
-            System.out.println("Transfer with ID " + transferId + " not found.");
+            return;
+        } else if (transfer == null || transfer.getTransferStatusId() != PENDING_TRANSFER_STATUS) {
+            System.out.println("Pending transfer with ID " + transferId + " not found.");
+            return;
         }
 
         System.out.println("1: Approve");
@@ -206,15 +192,23 @@ public class App {
         System.out.println("--------------------");
         int userInput = consoleService.promptForInt("Please choose an option: ");
 
+        BigDecimal amount = transfer.getAmount();
+
         if (userInput == 0) {
             return;
         } else if (userInput == 1) {
-            //logic for approval here
+            if (accountService.getAccountByUserId(currentUser.getUser().getId()).getBalance().compareTo(amount) < 0) {
+                System.out.println("Insufficient funds");
+            } else {
+                accountService.sendTeBucks(
+                        accountService.getAccountByUserId(currentUser.getUser().getId()).getId(),
+                        transfer.getAccountTo(), amount);
+                transferService.updateTransferStatus(transferId);
+            }
         } else {
             transferService.rejectTransfer(transferId);
+//            transferService.updateTransferStatus(transferId);
         }
-
-
 
     }
 
