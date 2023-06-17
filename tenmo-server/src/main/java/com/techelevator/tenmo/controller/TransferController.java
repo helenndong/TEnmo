@@ -41,9 +41,15 @@ public class TransferController {
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PutMapping("transfer/{id}")
-    public void updateTransferStatus(@NotNull @PathVariable int id){
-        transferDao.updateTransferStatus(id);
+    @PutMapping("transfer/approve/{id}")
+    public void updateTransferStatusToApproved(@NotNull @PathVariable int id){
+        transferDao.updateTransferStatusToApproved(id);
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("transfer/reject/{id}")
+    public void updateTransferStatusToRejected(@NotNull @PathVariable int id){
+        transferDao.updateTransferStatusToRejected(id);
     }
 
 //    @ResponseStatus(HttpStatus.NO_CONTENT)

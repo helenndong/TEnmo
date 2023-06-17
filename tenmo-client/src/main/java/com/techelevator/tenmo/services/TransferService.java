@@ -74,12 +74,26 @@ public class TransferService {
             BasicLogger.log(e.getMessage());
         } return allPendingTransfers;
     }
-    public void updateTransferStatus(int transferId) {
+    public void updateTransferStatusToApproved(int transferId) {
 
         Transfer updateTransferStatus = new Transfer();
 
         try {
-            restTemplate.put(baseURL + "/transfer/" + transferId, updateTransferStatus);
+            restTemplate.put(baseURL + "/transfer/approve/" + transferId, updateTransferStatus);
+        } catch (RestClientResponseException e) {
+            System.out.println("Failed to update transfer status. Error: " + e.getRawStatusCode());
+        } catch (ResourceAccessException e) {
+            System.out.println("Failed to establish a connection to the server. Error: " + e.getMessage());
+        }
+    }
+
+    public void updateTransferStatusToRejected(int transferId) {
+
+        Transfer updateTransferStatus = new Transfer();
+
+        try {
+            restTemplate.put(baseURL + "/transfer/reject/" + transferId, updateTransferStatus);
+            System.out.println("Transfer Rejected.");
         } catch (RestClientResponseException e) {
             System.out.println("Failed to update transfer status. Error: " + e.getRawStatusCode());
         } catch (ResourceAccessException e) {

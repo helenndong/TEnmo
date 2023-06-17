@@ -13,7 +13,8 @@ public interface TransferDao {
 
     Transfer createTransfer(Transfer transfer);
 
-    void updateTransferStatus(int id);
+    void updateTransferStatusToApproved(int id);
+    void updateTransferStatusToRejected(int id);
 
     void deleteTransfer(int id);
 

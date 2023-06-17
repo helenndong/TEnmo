@@ -7,15 +7,15 @@ import java.math.BigDecimal;
 public class Transfer {
 
     private int id;
-    @JsonProperty("transfer_type_id")
-    private int transferTypeId;
-    @JsonProperty("transfer_status_id")
-    private int transferStatusId;
     @JsonProperty("account_from")
     private int accountFrom;
     @JsonProperty("account_to")
     private int accountTo;
     private BigDecimal amount;
+    @JsonProperty("transfer_type_id")
+    private int transferTypeId;
+    @JsonProperty("transfer_status_id")
+    private int transferStatusId;
     @JsonProperty("transfer_type_desc")
     private String transferTypeDesc;
     @JsonProperty("transfer_status_desc")

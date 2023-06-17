@@ -203,10 +203,10 @@ public class App {
                 accountService.sendTeBucks(
                         accountService.getAccountByUserId(currentUser.getUser().getId()).getId(),
                         transfer.getAccountTo(), amount);
-                transferService.updateTransferStatus(transferId);
+                transferService.updateTransferStatusToApproved(transferId);
             }
         } else {
-            transferService.rejectTransfer(transferId);
+            transferService.updateTransferStatusToRejected(transferId);
 //            transferService.updateTransferStatus(transferId);
         }
 
