@@ -119,9 +119,11 @@ public class App {
             String usernameTo = accountService.getUsernameByAccountId(transfer.getAccountTo());
             String usernameFrom = accountService.getUsernameByAccountId(transfer.getAccountFrom());
 
-            if (transfer.getTransferStatusId() == 1) {
-                continue;
-            } else if (currentUserAccount.getId() == accountFromId) {
+//            if (transfer.getTransferStatusId() == 1) {
+//                continue;
+//            } else
+
+            if (currentUserAccount.getId() == accountFromId) {
                 fromTo = "To: " + usernameTo;
             } else {
                 fromTo = "From: " + usernameFrom;
@@ -305,6 +307,7 @@ public class App {
         }
         return true;
     }
+
     private boolean isValidAmount(BigDecimal amount, boolean isCurrentUser) {
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             System.out.println("Amount must be greater than zero.");
