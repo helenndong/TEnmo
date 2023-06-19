@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 
 public class AccountService {
 
-    public static final String API_BASE_URL = "http://localhost:8080/api/account/";
+    public static final String API_BASE_URL = "http://localhost:8080/account/";
     private RestTemplate restTemplate = new RestTemplate();
 
     private String authToken = null;

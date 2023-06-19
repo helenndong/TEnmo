@@ -167,6 +167,7 @@ public class App {
         System.out.println("Pending Transfers");
         System.out.printf("%-10s %-15s %s%n", "ID", "To", "Amount");
         System.out.println("-------------------------------------------");
+
         for (Transfer pendingTransfer : pendingTransfers) {
             String formattedAmount = String.format("$%.2f", pendingTransfer.getAmount());
             String accountTo = accountService.getUsernameByAccountId(pendingTransfer.getAccountTo());
@@ -201,8 +202,7 @@ public class App {
         int transferStatusId;
 
         if (userInput == 0) {
-            System.out.println("Transaction Cancelled.");
-            return;
+            System.out.println("Transaction cancelled.");
         } else if (userInput == 1) {
             if (accountService.getAccountByUserId(currentUser.getUser().getId()).getBalance().compareTo(amount) < 0) {
                 System.out.println("Insufficient funds");
@@ -213,14 +213,14 @@ public class App {
                 transferStatusId = APPROVED_TRANSFER_STATUS;
                 transferService.updateTransferStatus(transferId, transferStatusId);
                 if (transferService != null) {
-                    System.out.println("Transfer Status: Approved.");
+                    System.out.println("Transfer status: Approved.");
                 }
             }
         } else {
             transferStatusId = REJECTED_TRANSFER_STATUS;
             transferService.updateTransferStatus(transferId, transferStatusId);
             if (transferService != null) {
-                System.out.println("Transfer Status: Rejected.");
+                System.out.println("Transfer status: Rejected.");
             }
         }
     }
@@ -234,7 +234,7 @@ public class App {
     }
 
     private void printUserList() {
-        List<User> users = userService.getAllUsers();
+        List<User> users = userService.findAllUsers();
 
         System.out.println();
         System.out.println("---------------------");
@@ -253,11 +253,24 @@ public class App {
     private void performTransaction(String action, boolean isSending, boolean isCurrentUser) {
         printUserList();
 
-        int receiverId = consoleService.promptForInt(action);
-        if (isInvalidReceiverId(receiverId)) return;
+        int receiverId;
+        while (true) {
+            receiverId = consoleService.promptForInt(action);
+            if (receiverId == 0) {
+                System.out.println("Transaction cancelled.");
+                return;
+            } else if (isValidReceiverId(receiverId)) {
+                break;
+            }
+        }
 
-        BigDecimal amount = consoleService.promptForBigDecimal("Enter amount: ");
-        if (isValidAmount(amount, isCurrentUser)) return;
+        BigDecimal amount = null;
+        boolean isValidAmount = false;
+
+        while (!isValidAmount) {
+            amount = consoleService.promptForBigDecimal("Enter amount: ");
+            isValidAmount = isValidAmount(amount, isCurrentUser);
+        }
 
         if (isSending) {
             accountService.sendTeBucks(
@@ -265,7 +278,7 @@ public class App {
                     accountService.getAccountByUserId(receiverId).getId(),
                     amount);
             if (accountService != null) {
-                System.out.println("Transfer Status: Approved.");
+                System.out.println("Transfer status: Approved.");
             }
         } else {
             accountService.receiveTeBucks(
@@ -273,39 +286,38 @@ public class App {
                     accountService.getAccountByUserId(currentUser.getUser().getId()).getId(),
                     amount);
             if (accountService != null) {
-                System.out.println("Transfer Status: Pending.");
+                System.out.println("Transfer status: Pending.");
             }
         }
     }
 
-    private boolean isValidAmount(BigDecimal amount, boolean isCurrentUser) {
-        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-            System.out.println("Invalid amount. Amount must be greater than zero.");
-            return true;
-        }
-        if (isCurrentUser) {
-            if (accountService.getAccountByUserId(currentUser.getUser().getId()).getBalance().compareTo(amount) < 0) {
-                System.out.println("Insufficient funds");
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean isInvalidReceiverId(int receiverId) {
-        if (receiverId == 0) {
-            System.out.println("Transaction cancelled.");
-            return true;
-        } else if (receiverId == currentUser.getUser().getId()) {
+    private boolean isValidReceiverId(int receiverId) {
+        if (receiverId == currentUser.getUser().getId()) {
             System.out.println("You cannot enter your own ID.");
-            return true;
+            System.out.println();
+            return false;
         }
         User receiverUser = userService.getUserById(receiverId);
         if (receiverUser == null) {
             System.out.println("The ID you entered does not exist.");
-            return true;
+            System.out.println();
+            return false;
         }
-        return false;
+        return true;
+    }
+    private boolean isValidAmount(BigDecimal amount, boolean isCurrentUser) {
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            System.out.println("Amount must be greater than zero.");
+            System.out.println();
+            return false;
+        }
+        if (isCurrentUser) {
+            if (accountService.getAccountByUserId(currentUser.getUser().getId()).getBalance().compareTo(amount) < 0) {
+                System.out.println("Insufficient funds");
+                return false;
+            }
+        }
+        return true;
     }
 
 }

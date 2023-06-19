@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 
 @PreAuthorize("isAuthenticated()")
 @RestController
-@RequestMapping("/api/account")
+@RequestMapping("/account")
 public class AccountController {
 
     @Autowired

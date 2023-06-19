@@ -1,0 +1,7 @@
+2023-06-19T00:45:04.119303 401 : [no body]
+2023-06-19T00:45:17.409922 400 : [{"timestamp":"2023-06-19T04:45:17.396+00:00","status":400,"error":"Bad Request","message":"Validation failed for object='registerUserDto'. Error count: 2","errors":[{"codes":["NotEmpty.registerUserDto... (947 bytes)]
+2023-06-19T00:45:57.373658 401 : [no body]
+2023-06-19T00:46:04.565454 401 : [{"timestamp":"2023-06-19T04:46:04.560+00:00","status":401,"error":"Unauthorized","message":"Full authentication is required to access this resource","path":"/account/user/1004/balance"}]
+2023-06-19T00:46:20.718693 401 : [{"timestamp":"2023-06-19T04:46:20.716+00:00","status":401,"error":"Unauthorized","message":"Full authentication is required to access this resource","path":"/account/user/1004"}]
+2023-06-19T00:47:14.098005 401 : [{"timestamp":"2023-06-19T04:47:14.080+00:00","status":401,"error":"Unauthorized","message":"Full authentication is required to access this resource","path":"/api/account/user/1004/balance"}]
+2023-06-19T00:47:59.728723 401 : [no body]

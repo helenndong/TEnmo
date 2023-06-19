@@ -26,7 +26,7 @@ public class UserService {
 
     public void setAuthToken(String authToken) {this.authToken = authToken;}
 
-    public List<User> getAllUsers() {
+    public List<User> findAllUsers() {
         String url = baseUrl + "users";
         User[] users = restTemplate.getForObject(url, User[].class);
         return Arrays.asList(users);
