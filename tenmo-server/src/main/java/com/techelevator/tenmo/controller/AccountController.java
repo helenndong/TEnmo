@@ -2,15 +2,20 @@ package com.techelevator.tenmo.controller;
 
 import com.techelevator.tenmo.dao.AccountDao;
 import com.techelevator.tenmo.dao.TransferDao;
+import com.techelevator.tenmo.dao.UserDao;
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
+import com.techelevator.tenmo.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
-import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -24,6 +29,9 @@ public class AccountController {
     private AccountDao accountDao;
     @Autowired
     private TransferDao transferDao;
+
+    @Autowired
+    private UserDao userDao;
 
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     public Account getAccountById(@NotNull @PathVariable int id){
@@ -49,9 +57,25 @@ public class AccountController {
 
 
     @RequestMapping(path = "/user/{id}/balance", method = RequestMethod.GET)
-    public BigDecimal getBalanceByUserId(@NotNull @PathVariable int id) {
-        return accountDao.getBalanceByUserId(id);
+    public BigDecimal getBalanceByUserId(@NotNull @PathVariable int id, Principal principal) {
+        Authentication authentication = (Authentication) principal;
+        String authenticatedUsername = authentication.getName();
+
+        User authenticatedUser = userDao.findByUsername(authenticatedUsername);
+        int authenticatedUserId = authenticatedUser.getId();
+
+        if (id == authenticatedUserId) {
+            return accountDao.getBalanceByUserId(id);
+        }
+
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access to user's balance");
     }
+
+
+//    @RequestMapping(path = "/user/{id}/balance", method = RequestMethod.GET)
+//    public BigDecimal getBalanceByUserId(@NotNull @PathVariable int id) {
+//        return accountDao.getBalanceByUserId(id);
+//    }
 
     @RequestMapping(path = "/{id}/balance", method = RequestMethod.GET)
     public BigDecimal getBalanceByAccountId(@NotNull @PathVariable int id) {

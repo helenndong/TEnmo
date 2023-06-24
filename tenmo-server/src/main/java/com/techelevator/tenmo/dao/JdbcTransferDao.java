@@ -16,6 +16,10 @@ public class JdbcTransferDao implements TransferDao{
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    public JdbcTransferDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
     @Override
     public List<Transfer> getAllTransferByAccountId(int id) {
         List<Transfer> transferList = new ArrayList<>();
@@ -58,13 +62,6 @@ public class JdbcTransferDao implements TransferDao{
         String sql = "UPDATE transfer SET transfer_status_id = ? WHERE transfer_id = ?;";
         jdbcTemplate.update(sql, transferStatusId, id);
     }
-
-//    @Override
-//    public boolean checkTransferExists(int transferId) {
-//        String sql = "SELECT * FROM transfers where transfer_id = ?";
-//        int count = jdbcTemplate.queryForObject(sql, Integer.class, transferId);
-//        return count > 0;
-//    }
 
     @Override
     public void deleteTransfer(int id) {

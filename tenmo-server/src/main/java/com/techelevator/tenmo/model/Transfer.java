@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.relational.core.mapping.Column;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class Transfer {
 
@@ -21,6 +22,19 @@ public class Transfer {
     private String transferTypeDesc;
     @JsonProperty("transfer_status_desc")
     private String transferStatusDesc;
+
+    public Transfer () {
+
+    }
+
+    public Transfer(int id, int transferTypeId, int transferStatusId, int accountFrom, int accountTo, BigDecimal amount) {
+        this.id = id;
+        this.transferTypeId = transferTypeId;
+        this.transferStatusId = transferStatusId;
+        this.accountFrom = accountFrom;
+        this.accountTo = accountTo;
+        this.amount = amount;
+    }
 
 
     public int getId() {
@@ -86,4 +100,22 @@ public class Transfer {
     public void setTransferStatusDesc(String transferStatusDesc) {
         this.transferStatusDesc = transferStatusDesc;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Transfer other = (Transfer) obj;
+        return id == other.id &&
+                accountFrom == other.accountFrom &&
+                accountTo == other.accountTo &&
+                amount.compareTo(other.amount) == 0 &&
+                transferStatusId == other.transferStatusId;
+    }
+
+
 }
