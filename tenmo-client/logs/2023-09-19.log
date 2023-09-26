@@ -1,0 +1,4 @@
+2023-09-19T13:54:25.552368 I/O error on POST request for "http://localhost:8080/login": Connection refused; nested exception is java.net.ConnectException: Connection refused
+2023-09-19T13:55:35.609488 401 : [no body]
+2023-09-19T14:01:15.035885 401 : [{"timestamp":"2023-09-19T18:01:15.017+00:00","status":401,"error":"Unauthorized","message":"Full authentication is required to access this resource","path":"/account/user/1001"}]
+2023-09-19T14:08:12.112815 401 : [{"timestamp":"2023-09-19T18:08:12.097+00:00","status":401,"error":"Unauthorized","message":"Full authentication is required to access this resource","path":"/account/user/1001"}]
