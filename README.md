@@ -23,5 +23,4 @@ Transfer details: Users can retrieve the specifics of any past transfer via its 
 Requests:
 Users can request TE bucks from others.
 They can also view, approve, or reject pending transfer requests.
-=======
-# Tenmo
+
